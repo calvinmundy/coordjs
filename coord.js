@@ -1,91 +1,124 @@
 class Coord {
 
   /***********************************************************************************
-  getPointToPointAngle
+  *  getPointToPointDirection
+  *
+  *    returns object
+  *     {
+  *       degrees: val,
+  *       radians: val
+  *     }
+  *
+  *    @param {number} x1
+  *      start x pos
+  *    @param {number} y1
+  *      start y pos
+  *    @param {number} x2
+  *      destination x pos
+  *    @param {number} y2
+  *      destination y pos
+  *    @param {bool} invertYAxis
+  *      Set to true if y increases going down as it does on canvas
+  */
+  static getPointToPointDirection(x1, y1, x2, y2, invertYAxis) {
+    var radians = Math.atan2(x2 - x1, y2 - y1);
+    var degrees = Coord.radiansToDegrees(radians);
 
-    returns object
-     {
-       degrees: val,
-       radians: val
-     }
-
-    @param {int} x1
-      start x pos
-    @param {int} y1
-      start y pos
-    @param {int} x2
-      destination x pos
-    @param {int} y2
-      destination y pos
-    @param {bool} invertYAxis
-      Set to true if y increases going down as it does on canvas
-  ************************************************************************************/
-  static getPointToPointAngle(x1, y1, x2, y2, invertYAxis) {
-    var radAngle = Math.atan2(x2 - x1, y2 - y1);
-    var degrees = radAngle * (180 / Math.PI);
-
-    var adjustedAngle = degrees;
+    var adjustedDirection = degrees;
     if (degrees < 0) {
-      adjustedAngle = 360 + degrees;
+      adjustedDirection = 360 + degrees;
     }
 
     if (invertYAxis) {
-      //invert
-      //console.log('angle before inversion: ' + adjustedAngle);
-      if (adjustedAngle < 180) {
-        adjustedAngle = 180 - adjustedAngle;
-      }
-      else if (adjustedAngle > 180 && adjustedAngle <360) {
-        adjustedAngle = (360 - adjustedAngle) + 180;
-      }
-      //console.log('inverted angle: ' + adjustedAngle);
+      adjustedDirection = Coord.invertAngleOnYAxis(adjustedDirection);
     }
 
     //return object with degrees and radians
-    return {degrees: adjustedAngle, radians: adjustedAngle * (Math.PI / 180)}
+    return {degrees: adjustedDirection, radians: Coord.degreesToRadians(adjustedDirection)};
   }
 
 
+
   /***********************************************************************************
-  getSpriteProjectileAngle
+  * getSpriteProjectileDirection
+  *
+  *    returns object
+  *     {
+  *       degrees: val,
+  *      radians: val
+  *    }
+  *
+  *    @param {number} initDirection
+  *       The direction that the sprite starts at. Pointing up is 0°
+  *       ▲ - 0°
+  *       ▼ - 180°
+  *       ► - 90°
+  *       ◄ - 270°
+  *   @param {number} x1
+  *      start x pos
+  *    @param {number} y1
+  *      start y pos
+  *    @param {number} x2
+  *      destination x pos
+  *    @param {number} y2
+  *      destination y pos
+  *    @param {bool} invertYAxis
+  *      Set to true if y increases going down as it does on canvas
+  */
+  static getSpriteProjectileDirection(initDirection, x1, y1, x2, y2, invertYAxis) {
+    let pointToPointDirection = Coord.getPointToPointDirection(x1, y1, x2, y2, invertYAxis).degrees;
 
-    returns object
-     {
-       degrees: val,
-       radians: val
-     }
-
-    @param {int} initAngle
-       The angle that the sprite starts at. Pointing up is 0°
-       ▲ - 0°
-       ▼ - 180°
-       ► - 90°
-       ◄ - 270°
-    @param {int} x1
-      start x pos
-    @param {int} y1
-      start y pos
-    @param {int} x2
-      destination x pos
-    @param {int} y2
-      destination y pos
-    @param {bool} invertYAxis
-      Set to true if y increases going down as it does on canvas
-  ************************************************************************************/
-  static getSpriteProjectileAngle(initAngle, x1, y1, x2, y2, invertYAxis) {
-    let pointToPointAngle = Coord.getPointToPointAngle(x1, y1, x2, y2, invertYAxis).degrees;
-
-    //adjust for initial angle
-    if (initAngle !== 0) {
-      pointToPointAngle = pointToPointAngle - initAngle;
-      if (pointToPointAngle < 0) {
-        pointToPointAngle = 360 + pointToPointAngle;
+    //adjust for initial direction
+    if (initDirection !== 0) {
+      pointToPointDirection = pointToPointDirection - initDirection;
+      if (pointToPointDirection < 0) {
+        pointToPointDirection = 360 + pointToPointDirection;
       }
     }
-    //console.log('adjusted angle from initial angle: ' + pointToPointAngle);
+    //console.log('adjusted Direction from initial Direction: ' + pointToPointDirection);
 
     //return object with degrees and radians
-    return {degrees: pointToPointAngle, radians: pointToPointAngle * (Math.PI / 180)}
+    return {degrees: pointToPointDirection, radians: Coord.degreesToRadians(pointToPointDirection)};
+  }
+
+
+  /*****************************************************************************
+  *   degreesToRadians
+  *   returns number
+  *     radians value
+  *   @param {number} degrees
+  */
+  static degreesToRadians(degrees) {
+    return degrees * (Math.PI / 180);
+  }
+
+
+  /*****************************************************************************
+  *   radiansToDegrees
+  *   returns number
+  *     degrees value
+  *   @param {number} radians
+  */
+  static radiansToDegrees(radians) {
+    return radians * (180 / Math.PI);
+  }
+
+
+  /*****************************************************************************
+  *   invertAngleOnYAxis
+  *   returns number
+  *     value in degrees after angle has been inverted
+  *   @param {number} degrees
+  */
+  static invertAngleOnYAxis(degrees) {
+    let angle = degrees;
+    if (angle < 180) {
+      angle = 180 - angle;
+    }
+    else if (angle > 180 && angle <360) {
+      angle = (360 - angle) + 180;
+    }
+    return angle;
   }
 
 }
@@ -95,8 +128,8 @@ class Coord {
 
 
 
-//TESTING
-var ptpAngle = Coord.getPointToPointAngle(2, 1, 1, 0, true);
-var spriteProjectileAngle = Coord.getSpriteProjectileAngle(90, 2, 1, 1, 0, true)
-console.log(ptpAngle);
-console.log(spriteProjectileAngle);
+//TESTING///////////////////////////////////////////////////////////////////////////////
+var ptpDirection = Coord.getPointToPointDirection(2, 1, 1, 0, true);
+var spriteProjectileDirection = Coord.getSpriteProjectileDirection(90, 2, 1, 1, 0, true)
+console.log(ptpDirection);
+console.log(spriteProjectileDirection);
