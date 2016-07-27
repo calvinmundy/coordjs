@@ -45,8 +45,8 @@ class Coord {
   *    returns object
   *     {
   *       degrees: val,
-  *      radians: val
-  *    }
+  *       radians: val
+  *     }
   *
   *    @param {number} initDirection
   *       The direction that the sprite starts at. Pointing up is 0°
