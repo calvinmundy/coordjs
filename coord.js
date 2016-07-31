@@ -23,11 +23,7 @@ class Coord {
   static getPointToPointDirection(x1, y1, x2, y2, invertYAxis) {
     var radians = Math.atan2(x2 - x1, y2 - y1);
     var degrees = Coord.radiansToDegrees(radians);
-
-    var adjustedDirection = degrees;
-    if (degrees < 0) {
-      adjustedDirection = 360 + degrees;
-    }
+    var adjustedDirection = Coord.normaliseAngle(degrees);
 
     if (invertYAxis) {
       adjustedDirection = Coord.invertAngleOnYAxis(adjustedDirection);
@@ -101,6 +97,21 @@ class Coord {
   */
   static radiansToDegrees(radians) {
     return radians * (180 / Math.PI);
+  }
+
+
+  /*****************************************************************************
+  *   normaliseAngle
+  *   returns number
+  *     normalised value in degrees
+  *   @param {number} degrees
+  */
+  static normaliseAngle(degrees) {
+    var nAngle = degrees % 360;
+    if (nAngle < 0) {
+      nAngle += 360;
+    }
+    return nAngle;
   }
 
 
