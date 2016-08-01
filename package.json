@@ -1,0 +1,35 @@
+{
+  "name": "coordjs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/coord.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/calvinmundy/coordjs.git"
+  },
+  "keywords": [
+    "math",
+    "angle",
+    "cartesian",
+    "point",
+    "distance"
+  ],
+  "author": "Calvin Mundy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/calvinmundy/coordjs/issues"
+  },
+  "homepage": "https://github.com/calvinmundy/coordjs#readme",
+  "devDependencies": {
+    "babel-preset-es2015": "^6.9.0",
+    "babelify": "^7.3.0",
+    "browserify": "^13.1.0",
+    "gulp": "^3.9.1",
+    "gulp-util": "^3.0.7",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.7.0"
+  }
+}

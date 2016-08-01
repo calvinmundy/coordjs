@@ -1,4 +1,4 @@
-class Coord {
+export class Coord {
 
   /***********************************************************************************
   *  getPointToPointDirection
@@ -21,16 +21,16 @@ class Coord {
   *      Set to true if y increases going down as it does on canvas
   */
   static getPointToPointDirection(x1, y1, x2, y2, invertYAxis) {
-    var radians = Math.atan2(x2 - x1, y2 - y1);
-    var degrees = Coord.radiansToDegrees(radians);
-    var adjustedDirection = Coord.normaliseAngle(degrees);
+    let radians = Math.atan2(x2 - x1, y2 - y1);
+    let degrees = Coord.radiansToDegrees(radians);
+    degrees = Coord.normaliseAngle(degrees);
 
     if (invertYAxis) {
-      adjustedDirection = Coord.invertAngleOnYAxis(adjustedDirection);
+      degrees = Coord.invertAngleOnYAxis(degrees);
     }
 
     //return object with degrees and radians
-    return {degrees: adjustedDirection, radians: Coord.degreesToRadians(adjustedDirection)};
+    return {degrees: degrees, radians: Coord.degreesToRadians(degrees)};
   }
 
 
@@ -65,14 +65,9 @@ class Coord {
     let pointToPointDirection = Coord.getPointToPointDirection(x1, y1, x2, y2, invertYAxis).degrees;
 
     //adjust for initial direction
-    if (initDirection !== 0) {
-      pointToPointDirection = pointToPointDirection - initDirection;
-      if (pointToPointDirection < 0) {
-        pointToPointDirection = 360 + pointToPointDirection;
-      }
-    }
-    //console.log('adjusted Direction from initial Direction: ' + pointToPointDirection);
-
+    pointToPointDirection = pointToPointDirection - initDirection;
+    pointToPointDirection = Coord.normaliseAngle(pointToPointDirection);
+   
     //return object with degrees and radians
     return {degrees: pointToPointDirection, radians: Coord.degreesToRadians(pointToPointDirection)};
   }
@@ -134,13 +129,3 @@ class Coord {
 
 }
 
-
-
-
-
-
-//TESTING///////////////////////////////////////////////////////////////////////////////
-var ptpDirection = Coord.getPointToPointDirection(2, 1, 1, 0, true);
-var spriteProjectileDirection = Coord.getSpriteProjectileDirection(90, 2, 1, 1, 0, true)
-console.log(ptpDirection);
-console.log(spriteProjectileDirection);
