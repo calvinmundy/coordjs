@@ -3,7 +3,7 @@ export class Coord {
   /***********************************************************************************
   *  getPointToPointDirection
   *
-  *    returns object
+  *    @returns {object}
   *     {
   *       degrees: val,
   *       radians: val
@@ -26,7 +26,7 @@ export class Coord {
     degrees = Coord.normaliseAngle(degrees);
 
     if (invertYAxis) {
-      degrees = Coord.invertAngleOnYAxis(degrees);
+      degrees = Coord.invertAngleOnXAxis(degrees);
     }
 
     //return object with degrees and radians
@@ -38,7 +38,7 @@ export class Coord {
   /***********************************************************************************
   * getSpriteProjectileDirection
   *
-  *    returns object
+  *    @returns {object}
   *     {
   *       degrees: val,
   *       radians: val
@@ -75,7 +75,7 @@ export class Coord {
 
   /*****************************************************************************
   *   degreesToRadians
-  *   returns number
+  *   @returns {number}
   *     radians value
   *   @param {number} degrees
   */
@@ -86,7 +86,7 @@ export class Coord {
 
   /*****************************************************************************
   *   radiansToDegrees
-  *   returns number
+  *   @returns {number}
   *     degrees value
   *   @param {number} radians
   */
@@ -97,7 +97,7 @@ export class Coord {
 
   /*****************************************************************************
   *   normaliseAngle
-  *   returns number
+  *   @returns {number}
   *     normalised value in degrees
   *   @param {number} degrees
   */
@@ -111,20 +111,72 @@ export class Coord {
 
 
   /*****************************************************************************
-  *   invertAngleOnYAxis
-  *   returns number
+  *   invertAngleOnXAxis
+  *   @returns {number}
   *     value in degrees after angle has been inverted
-  *   @param {number} degrees
+  *   @param {number} angle
   */
-  static invertAngleOnYAxis(degrees) {
-    let angle = degrees;
-    if (angle < 180) {
-      angle = 180 - angle;
+  static invertAngleOnXAxis(angle) {
+    return Coord.invertAngleOnAxis(angle, 90);
+  }
+
+
+  /*****************************************************************************
+  *   invertAngleOnYAxis
+  *   @returns {number}
+  *     value in degrees after angle has been inverted
+  *   @param {number} angle
+  */
+  static invertAngleOnYAxis(angle) {
+    return Coord.invertAngleOnAxis(angle, 0);
+  }
+
+
+  /*****************************************************************************
+  *   invertAngleOnAxis
+  *   @returns {number}
+  *     value in degrees after angle has been inverted
+  *   @param {number} angle
+  *     This is the angle to invert and is expected to be in degrees
+  *   @param {number} axisAngle
+  *       ▲ - 0°
+  *       ▼ - 180° (same as 0°)
+  *       ► - 90°
+  *       ◄ - 270° (same as 90°)
+  */
+  static invertAngleOnAxis(angle, axisAngle) {
+
+    let invertedAngle = angle;
+
+    let lowLimit1 = axisAngle - 90;
+    let upperLimit1 = axisAngle + 90;
+
+    let lowLimit2 = upperLimit1;
+    let upperLimit2 = lowLimit2 + 180;
+
+    let offset = 0;
+    let adjustedAngle = angle;
+
+    //convert to negative degrees if nessecary
+    if (angle > upperLimit2) {
+      adjustedAngle = angle - 360;
     }
-    else if (angle > 180 && angle <360) {
-      angle = (360 - angle) + 180;
+
+    if (adjustedAngle > lowLimit1 && adjustedAngle < upperLimit1) {
+      offset = 0 - lowLimit1;
+      adjustedAngle += offset;
+      invertedAngle = 180 - adjustedAngle;
     }
-    return angle;
+    else if (adjustedAngle > lowLimit2 && adjustedAngle < upperLimit2) {
+      offset = 180 - lowLimit2;
+      adjustedAngle += offset;
+      invertedAngle = 360 - adjustedAngle + 180
+    }
+
+    invertedAngle -= offset;
+    invertedAngle = Coord.normaliseAngle(invertedAngle);
+
+    return invertedAngle;
   }
 
 }
