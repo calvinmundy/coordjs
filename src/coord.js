@@ -8,7 +8,7 @@ export class Coord {
 
   //####################################################################################
   /**
-  *  empty constrictor to get jsdoc to work
+  *  Empty constructor to get jsdoc to work
   *
   */
   constructor() {
