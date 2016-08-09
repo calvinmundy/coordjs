@@ -92,6 +92,27 @@ export class Coord {
 
   //####################################################################################
   /**
+  *   getDistanceBetweenPoints
+  *   @returns {number}
+  *   @param {number} x1
+  *     start x pos
+  *   @param {number} y1
+  *     start y pos
+  *   @param {number} x2
+  *     end x pos
+  *   @param {number} y2
+  *     end y pos
+  */
+  static getDistanceBetweenPoints(x1, y1, x2, y2) {
+    let xDist = Math.abs(x1 - x2);
+    let yDist = Math.abs(y1 - y2);
+
+    return Math.sqrt( (xDist * xDist) + (yDist * yDist));
+  }
+
+
+  //####################################################################################
+  /**
   *   degreesToRadians
   *   @returns {number}
   *     radians value
